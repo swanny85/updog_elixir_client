@@ -4,16 +4,11 @@ defmodule UpdogElixirClient.Application do
 
   @impl true
   def start(_type, _args) do
-    children =
-      if UpdogElixirClient.enabled?() do
-        [
-          {Finch, name: UpdogElixirClient.Finch},
-          UpdogElixirClient.Collector,
-          UpdogElixirClient.TelemetryHandler
-        ]
-      else
-        []
-      end
+    children = [
+      {Finch, name: UpdogElixirClient.Finch},
+      UpdogElixirClient.Collector,
+      UpdogElixirClient.TelemetryHandler
+    ]
 
     opts = [strategy: :one_for_one, name: UpdogElixirClient.Supervisor]
     Supervisor.start_link(children, opts)

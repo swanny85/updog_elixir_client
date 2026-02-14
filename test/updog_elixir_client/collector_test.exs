@@ -8,9 +8,11 @@ defmodule UpdogElixirClient.CollectorTest do
   setup do
     Mox.set_mox_global()
 
-    # No Collector runs by default (no api_key in test), so start one
-    pid = start_supervised!(UpdogElixirClient.Collector)
-    %{collector: pid}
+    :sys.replace_state(UpdogElixirClient.Collector, fn _state ->
+      %{events: [], logs: [], metrics: []}
+    end)
+
+    :ok
   end
 
   describe "push_event/1" do
