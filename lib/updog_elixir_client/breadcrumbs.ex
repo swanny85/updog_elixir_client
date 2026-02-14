@@ -1,4 +1,4 @@
-defmodule UpdogClient.Breadcrumbs do
+defmodule UpdogElixirClient.Breadcrumbs do
   @moduledoc """
   Per-process breadcrumb trail stored in Logger.metadata.
   """
@@ -13,7 +13,7 @@ defmodule UpdogClient.Breadcrumbs do
       timestamp: DateTime.utc_now() |> DateTime.to_iso8601()
     }
 
-    existing = get()
+    existing = Logger.metadata() |> Keyword.get(@key, [])
     updated = Enum.take([crumb | existing], @max_breadcrumbs)
     Logger.metadata([{@key, updated}])
     :ok

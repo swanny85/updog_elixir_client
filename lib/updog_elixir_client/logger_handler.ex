@@ -1,10 +1,10 @@
-defmodule UpdogClient.LoggerHandler do
+defmodule UpdogElixirClient.LoggerHandler do
   @moduledoc """
   Erlang :logger handler that captures crash reports and sends them to Updog.
 
   Add to your application start:
 
-      :logger.add_handler(:updog, UpdogClient.LoggerHandler, %{})
+      :logger.add_handler(:updog, UpdogElixirClient.LoggerHandler, %{})
   """
 
   @behaviour :logger_handler
@@ -14,15 +14,15 @@ defmodule UpdogClient.LoggerHandler do
       when level in [:error, :critical, :alert, :emergency] do
     case msg do
       {:report, %{reason: {exception, stacktrace}}} when is_exception(exception) ->
-        UpdogClient.notify(exception, stacktrace: stacktrace)
+        UpdogElixirClient.notify(exception, stacktrace: stacktrace)
 
       {:report, %{reason: {{kind, reason}, stacktrace}}} when is_list(stacktrace) ->
-        UpdogClient.notify_error(kind, reason, stacktrace)
+        UpdogElixirClient.notify_error(kind, reason, stacktrace)
 
       {:string, message} ->
         context = Map.get(meta, :updog_context, %{})
 
-        UpdogClient.notify_error(:error, %RuntimeError{message: to_string(message)}, [],
+        UpdogElixirClient.notify_error(:error, %RuntimeError{message: to_string(message)}, [],
           context: context
         )
 

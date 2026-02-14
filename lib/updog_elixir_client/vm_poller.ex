@@ -1,15 +1,15 @@
-defmodule UpdogClient.VmPoller do
+defmodule UpdogElixirClient.VmPoller do
   @moduledoc """
   Collects BEAM VM metrics via telemetry_poller and sends them to Updog.
 
   Add to your application supervision tree:
 
-      {UpdogClient.VmPoller, []}
+      {UpdogElixirClient.VmPoller, []}
   """
 
   use GenServer
 
-  alias UpdogClient.Collector
+  alias UpdogElixirClient.Collector
 
   @vm_events [
     [:vm, :memory],

@@ -1,4 +1,4 @@
-defmodule UpdogClient.Backtrace do
+defmodule UpdogElixirClient.Backtrace do
   @moduledoc """
   Formats Erlang stacktraces into structured data for the Updog API.
   """

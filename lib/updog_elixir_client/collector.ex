@@ -1,4 +1,4 @@
-defmodule UpdogClient.Collector do
+defmodule UpdogElixirClient.Collector do
   @moduledoc """
   GenServer that buffers telemetry events and logs, flushing them
   in batches to the Updog server.
@@ -6,7 +6,7 @@ defmodule UpdogClient.Collector do
 
   use GenServer
 
-  alias UpdogClient.{Client, Config}
+  alias UpdogElixirClient.Config
 
   @flush_interval 5_000
   @max_batch_size 100
@@ -84,14 +84,18 @@ defmodule UpdogClient.Collector do
   end
 
   defp flush_events(events) do
-    Client.post_json(Config.events_url(), %{events: Enum.reverse(events)})
+    http_client().post_json(Config.events_url(), %{events: Enum.reverse(events)})
   end
 
   defp flush_logs(logs) do
-    Client.post_json(Config.logs_url(), %{logs: Enum.reverse(logs)})
+    http_client().post_json(Config.logs_url(), %{logs: Enum.reverse(logs)})
   end
 
   defp flush_metrics(metrics) do
-    Client.post_json(Config.metrics_url(), %{metrics: Enum.reverse(metrics)})
+    http_client().post_json(Config.metrics_url(), %{metrics: Enum.reverse(metrics)})
+  end
+
+  defp http_client do
+    Application.get_env(:updog_elixir_client, :http_client, UpdogElixirClient.Client)
   end
 end

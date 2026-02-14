@@ -1,1 +1,1 @@
-# updog_client
+# updog_elixir_client

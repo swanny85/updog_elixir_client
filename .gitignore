@@ -1,0 +1,7 @@
+/_build/
+/deps/
+/doc/
+*.ez
+*.beam
+/cover/
+erl_crash.dump

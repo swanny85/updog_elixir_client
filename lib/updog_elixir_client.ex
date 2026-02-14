@@ -1,10 +1,10 @@
-defmodule UpdogClient do
+defmodule UpdogElixirClient do
   @moduledoc """
   Public API for the Updog APM client.
 
   ## Configuration
 
-      config :updog_client,
+      config :updog_elixir_client,
         api_key: System.fetch_env!("UPDOG_API_KEY"),
         endpoint: System.fetch_env!("UPDOG_ENDPOINT"),
         environment: config_env(),
@@ -12,7 +12,7 @@ defmodule UpdogClient do
         enabled: true
   """
 
-  alias UpdogClient.{NoticeSender, Context, Breadcrumbs, Collector}
+  alias UpdogElixirClient.{NoticeSender, Context, Breadcrumbs, Collector}
 
   @doc """
   Report an error to Updog. Errors are sent immediately, never batched.
@@ -65,6 +65,6 @@ defmodule UpdogClient do
   Returns whether the client is enabled.
   """
   def enabled? do
-    Application.get_env(:updog_client, :enabled, true)
+    Application.get_env(:updog_elixir_client, :enabled, true)
   end
 end

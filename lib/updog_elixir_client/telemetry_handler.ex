@@ -1,4 +1,4 @@
-defmodule UpdogClient.TelemetryHandler do
+defmodule UpdogElixirClient.TelemetryHandler do
   @moduledoc """
   Attaches to Phoenix, Ecto, and Oban telemetry events.
   Forwards processed events to the Collector for batched sending.
@@ -6,7 +6,7 @@ defmodule UpdogClient.TelemetryHandler do
 
   use GenServer
 
-  alias UpdogClient.{Collector, Config}
+  alias UpdogElixirClient.{Collector, Config}
 
   def start_link(opts) do
     GenServer.start_link(__MODULE__, opts, name: __MODULE__)

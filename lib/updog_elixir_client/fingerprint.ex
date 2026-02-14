@@ -1,4 +1,4 @@
-defmodule UpdogClient.Fingerprint do
+defmodule UpdogElixirClient.Fingerprint do
   @moduledoc """
   Generates SHA256 fingerprints matching the server-side algorithm.
   """

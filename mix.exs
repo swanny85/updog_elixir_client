@@ -1,9 +1,9 @@
-defmodule UpdogClient.MixProject do
+defmodule UpdogElixirClient.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :updog_client,
+      app: :updog_elixir_client,
       version: "0.1.0",
       elixir: "~> 1.15",
       start_permanent: Mix.env() == :prod,
@@ -15,7 +15,7 @@ defmodule UpdogClient.MixProject do
 
   def application do
     [
-      mod: {UpdogClient.Application, []},
+      mod: {UpdogElixirClient.Application, []},
       extra_applications: [:logger]
     ]
   end
@@ -26,7 +26,8 @@ defmodule UpdogClient.MixProject do
       {:jason, "~> 1.4"},
       {:telemetry, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
-      {:plug, "~> 1.14", optional: true}
+      {:plug, "~> 1.14", optional: true},
+      {:mox, "~> 1.0", only: :test}
     ]
   end
 

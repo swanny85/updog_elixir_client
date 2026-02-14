@@ -1,4 +1,4 @@
-defmodule UpdogClient.Context do
+defmodule UpdogElixirClient.Context do
   @moduledoc """
   Per-process context stored in Logger.metadata.
   Automatically cleaned up on process death.

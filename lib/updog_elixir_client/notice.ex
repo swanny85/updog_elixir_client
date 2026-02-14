@@ -1,9 +1,9 @@
-defmodule UpdogClient.Notice do
+defmodule UpdogElixirClient.Notice do
   @moduledoc """
   Builds error notice payloads for the Updog API.
   """
 
-  alias UpdogClient.{Backtrace, Config, Context, Breadcrumbs, Fingerprint}
+  alias UpdogElixirClient.{Backtrace, Config, Context, Breadcrumbs}
 
   def build(exception, opts \\ []) when is_exception(exception) do
     stacktrace = Keyword.get(opts, :stacktrace, [])
