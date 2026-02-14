@@ -7,7 +7,8 @@ defmodule UpdogElixirClient.Application do
     children = [
       {Finch, name: UpdogElixirClient.Finch},
       UpdogElixirClient.Collector,
-      UpdogElixirClient.TelemetryHandler
+      UpdogElixirClient.TelemetryHandler,
+      UpdogElixirClient.VmPoller
     ]
 
     opts = [strategy: :one_for_one, name: UpdogElixirClient.Supervisor]

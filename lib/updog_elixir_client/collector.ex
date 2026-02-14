@@ -84,15 +84,21 @@ defmodule UpdogElixirClient.Collector do
   end
 
   defp flush_events(events) do
-    http_client().post_json(Config.events_url(), %{events: Enum.reverse(events)})
+    if UpdogElixirClient.enabled?() do
+      http_client().post_json(Config.events_url(), %{events: Enum.reverse(events)})
+    end
   end
 
   defp flush_logs(logs) do
-    http_client().post_json(Config.logs_url(), %{logs: Enum.reverse(logs)})
+    if UpdogElixirClient.enabled?() do
+      http_client().post_json(Config.logs_url(), %{logs: Enum.reverse(logs)})
+    end
   end
 
   defp flush_metrics(metrics) do
-    http_client().post_json(Config.metrics_url(), %{metrics: Enum.reverse(metrics)})
+    if UpdogElixirClient.enabled?() do
+      http_client().post_json(Config.metrics_url(), %{metrics: Enum.reverse(metrics)})
+    end
   end
 
   defp http_client do

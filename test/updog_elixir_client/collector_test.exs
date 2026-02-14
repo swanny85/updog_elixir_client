@@ -8,8 +8,15 @@ defmodule UpdogElixirClient.CollectorTest do
   setup do
     Mox.set_mox_global()
 
+    # Set api_key so enabled?() returns true for flush tests
+    Application.put_env(:updog_elixir_client, :api_key, "test-key")
+
     :sys.replace_state(UpdogElixirClient.Collector, fn _state ->
       %{events: [], logs: [], metrics: []}
+    end)
+
+    on_exit(fn ->
+      Application.delete_env(:updog_elixir_client, :api_key)
     end)
 
     :ok
