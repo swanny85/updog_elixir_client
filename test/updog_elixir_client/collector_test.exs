@@ -6,15 +6,11 @@ defmodule UpdogElixirClient.CollectorTest do
   setup :verify_on_exit!
 
   setup do
-    # Allow mock calls from any process (the Collector GenServer)
     Mox.set_mox_global()
 
-    # Reset Collector state to empty
-    :sys.replace_state(UpdogElixirClient.Collector, fn _state ->
-      %{events: [], logs: [], metrics: []}
-    end)
-
-    :ok
+    # No Collector runs by default (no api_key in test), so start one
+    pid = start_supervised!(UpdogElixirClient.Collector)
+    %{collector: pid}
   end
 
   describe "push_event/1" do
@@ -22,7 +18,6 @@ defmodule UpdogElixirClient.CollectorTest do
       UpdogElixirClient.Collector.push_event(%{type: "test", data: 1})
       UpdogElixirClient.Collector.push_event(%{type: "test", data: 2})
 
-      # Give casts time to process
       Process.sleep(50)
 
       state = :sys.get_state(UpdogElixirClient.Collector)
@@ -41,7 +36,6 @@ defmodule UpdogElixirClient.CollectorTest do
       UpdogElixirClient.Collector.push_event(%{type: "test", data: 1})
       UpdogElixirClient.Collector.push_event(%{type: "test", data: 2})
 
-      # Trigger flush manually
       Process.sleep(50)
       send(Process.whereis(UpdogElixirClient.Collector), :flush)
       Process.sleep(50)
@@ -64,7 +58,6 @@ defmodule UpdogElixirClient.CollectorTest do
     end
 
     test "flush does not send when empty" do
-      # No mock expectations = no calls should be made
       send(Process.whereis(UpdogElixirClient.Collector), :flush)
       Process.sleep(50)
     end
@@ -96,7 +89,6 @@ defmodule UpdogElixirClient.CollectorTest do
         UpdogElixirClient.Collector.push_event(%{type: "test", data: i})
       end
 
-      # Give time for casts and flush to process
       Process.sleep(100)
 
       state = :sys.get_state(UpdogElixirClient.Collector)

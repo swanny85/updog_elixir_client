@@ -9,8 +9,7 @@ defmodule UpdogElixirClient.ConfigTest do
       api_key: Application.get_env(:updog_elixir_client, :api_key),
       endpoint: Application.get_env(:updog_elixir_client, :endpoint),
       environment: Application.get_env(:updog_elixir_client, :environment),
-      sample_rate: Application.get_env(:updog_elixir_client, :sample_rate),
-      enabled: Application.get_env(:updog_elixir_client, :enabled)
+      sample_rate: Application.get_env(:updog_elixir_client, :sample_rate)
     }
 
     on_exit(fn ->
@@ -33,9 +32,9 @@ defmodule UpdogElixirClient.ConfigTest do
       assert Config.api_key() == nil
     end
 
-    test "endpoint defaults to localhost:4000" do
+    test "endpoint defaults to production" do
       Application.delete_env(:updog_elixir_client, :endpoint)
-      assert Config.endpoint() == "http://localhost:4000"
+      assert Config.endpoint() == "https://wuzupdog.com"
     end
 
     test "environment defaults to dev" do
@@ -46,11 +45,6 @@ defmodule UpdogElixirClient.ConfigTest do
     test "sample_rate defaults to 1.0" do
       Application.delete_env(:updog_elixir_client, :sample_rate)
       assert Config.sample_rate() == 1.0
-    end
-
-    test "enabled? defaults to true" do
-      Application.delete_env(:updog_elixir_client, :enabled)
-      assert Config.enabled?() == true
     end
 
     test "ecto_repos defaults to empty list" do
@@ -104,7 +98,7 @@ defmodule UpdogElixirClient.ConfigTest do
 
     test "uses default endpoint when not configured" do
       Application.delete_env(:updog_elixir_client, :endpoint)
-      assert Config.notices_url() == "http://localhost:4000/api/v1/notices"
+      assert Config.notices_url() == "https://wuzupdog.com/api/v1/notices"
     end
   end
 end

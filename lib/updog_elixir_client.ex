@@ -5,11 +5,9 @@ defmodule UpdogElixirClient do
   ## Configuration
 
       config :updog_elixir_client,
-        api_key: System.fetch_env!("UPDOG_API_KEY"),
-        endpoint: System.fetch_env!("UPDOG_ENDPOINT"),
+        api_key: "your-api-key",
         environment: config_env(),
-        sample_rate: 1.0,
-        enabled: true
+        sample_rate: 1.0
   """
 
   alias UpdogElixirClient.{NoticeSender, Context, Breadcrumbs, Collector}
@@ -62,9 +60,9 @@ defmodule UpdogElixirClient do
   end
 
   @doc """
-  Returns whether the client is enabled.
+  Returns whether the client is enabled. Enabled when an API key is configured.
   """
   def enabled? do
-    Application.get_env(:updog_elixir_client, :enabled, true)
+    UpdogElixirClient.Config.api_key() != nil
   end
 end

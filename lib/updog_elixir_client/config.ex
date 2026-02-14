@@ -4,11 +4,9 @@ defmodule UpdogElixirClient.Config do
   """
 
   def api_key, do: Application.get_env(:updog_elixir_client, :api_key)
-  def endpoint, do: Application.get_env(:updog_elixir_client, :endpoint, "http://localhost:4000")
+  def endpoint, do: Application.get_env(:updog_elixir_client, :endpoint, "https://wuzupdog.com")
   def environment, do: Application.get_env(:updog_elixir_client, :environment, "dev")
   def sample_rate, do: Application.get_env(:updog_elixir_client, :sample_rate, 1.0)
-  def enabled?, do: Application.get_env(:updog_elixir_client, :enabled, true)
-
   def ecto_repos, do: Application.get_env(:updog_elixir_client, :ecto_repos, [])
 
   def notices_url, do: "#{endpoint()}/api/v1/notices"
