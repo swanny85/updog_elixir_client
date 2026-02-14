@@ -2,36 +2,27 @@ defmodule UpdogElixirClient.Plug do
   @moduledoc """
   Plug integration for auto-capturing HTTP errors.
 
-  Add to your endpoint or router:
+  Add to your router:
 
       use UpdogElixirClient.Plug
   """
 
   defmacro __using__(_opts) do
     quote do
-      @before_compile UpdogElixirClient.Plug
-    end
-  end
+      use Plug.ErrorHandler
 
-  defmacro __before_compile__(_env) do
-    quote do
-      defoverridable call: 2
+      @impl Plug.ErrorHandler
+      def handle_errors(conn, %{kind: _kind, reason: reason, stack: stacktrace}) do
+        request = %{
+          method: conn.method,
+          url: "#{conn.scheme}://#{conn.host}#{conn.request_path}",
+          params: conn.params
+        }
 
-      def call(conn, opts) do
-        try do
-          super(conn, opts)
-        rescue
-          exception ->
-            stacktrace = __STACKTRACE__
-
-            request = %{
-              method: conn.method,
-              url: "#{conn.scheme}://#{conn.host}#{conn.request_path}",
-              params: conn.params
-            }
-
-            UpdogElixirClient.notify(exception, stacktrace: stacktrace, request: request)
-            reraise exception, stacktrace
+        if is_exception(reason) do
+          UpdogElixirClient.notify(reason, stacktrace: stacktrace, request: request)
+        else
+          UpdogElixirClient.notify_error(:error, reason, stacktrace, request: request)
         end
       end
     end

@@ -4,41 +4,34 @@ defmodule UpdogElixirClient.TelemetryHandler do
   Forwards processed events to the Collector for batched sending.
   """
 
-  use GenServer
-
   alias UpdogElixirClient.{Collector, Config}
 
-  def start_link(opts) do
-    GenServer.start_link(__MODULE__, opts, name: __MODULE__)
-  end
-
-  @impl true
-  def init(_opts) do
-    attach_handlers()
-    {:ok, %{}}
-  end
-
-  defp attach_handlers do
+  def attach do
     events = [
       [:phoenix, :endpoint, :stop],
       [:phoenix, :live_view, :mount, :stop],
       [:phoenix, :live_view, :handle_event, :stop]
     ]
 
-    :telemetry.attach_many("updog-phoenix", events, &handle_phoenix_event/4, nil)
+    :telemetry.attach_many(
+      "updog-phoenix",
+      events,
+      &__MODULE__.handle_phoenix_event/4,
+      nil
+    )
 
     ecto_repos = Config.ecto_repos()
 
     Enum.each(ecto_repos, fn repo_path ->
       event = repo_path ++ [:query]
       id = "updog-ecto-#{Enum.join(repo_path, "-")}"
-      :telemetry.attach(id, event, &handle_ecto_event/4, nil)
+      :telemetry.attach(id, event, &__MODULE__.handle_ecto_event/4, nil)
     end)
 
     :telemetry.attach(
       "updog-oban",
       [:oban, :job, :stop],
-      &handle_oban_event/4,
+      &__MODULE__.handle_oban_event/4,
       nil
     )
   end

@@ -6,10 +6,12 @@ defmodule UpdogElixirClient.Application do
   def start(_type, _args) do
     children = [
       {Finch, name: UpdogElixirClient.Finch},
-      UpdogElixirClient.Collector,
-      UpdogElixirClient.TelemetryHandler,
-      UpdogElixirClient.VmPoller
+      UpdogElixirClient.Collector
     ]
+
+    UpdogElixirClient.TelemetryHandler.attach()
+    UpdogElixirClient.VmPoller.attach()
+    :logger.add_handler(:updog, UpdogElixirClient.LoggerHandler, %{})
 
     opts = [strategy: :one_for_one, name: UpdogElixirClient.Supervisor]
     Supervisor.start_link(children, opts)

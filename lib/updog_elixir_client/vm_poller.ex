@@ -1,13 +1,7 @@
 defmodule UpdogElixirClient.VmPoller do
   @moduledoc """
-  Collects BEAM VM metrics via telemetry_poller and sends them to Updog.
-
-  Add to your application supervision tree:
-
-      {UpdogElixirClient.VmPoller, []}
+  Attaches to BEAM VM telemetry events and sends metrics to Updog.
   """
-
-  use GenServer
 
   alias UpdogElixirClient.Collector
 
@@ -17,14 +11,8 @@ defmodule UpdogElixirClient.VmPoller do
     [:vm, :system_counts]
   ]
 
-  def start_link(opts) do
-    GenServer.start_link(__MODULE__, opts, name: __MODULE__)
-  end
-
-  @impl true
-  def init(_opts) do
-    :telemetry.attach_many("updog-vm-metrics", @vm_events, &handle_vm_event/4, nil)
-    {:ok, %{}}
+  def attach do
+    :telemetry.attach_many("updog-vm-metrics", @vm_events, &__MODULE__.handle_vm_event/4, nil)
   end
 
   def handle_vm_event([:vm, :memory], measurements, _metadata, _config) do
